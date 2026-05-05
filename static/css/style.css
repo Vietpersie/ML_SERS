@@ -1,0 +1,11 @@
+body {
+    display: flex;
+    flex-direction: column; /* Xếp các phần tử theo chiều dọc */
+    min-height: 100vh;      /* Chiều cao tối thiểu bằng 100% chiều cao màn hình (viewport) */
+    margin: 0;              /* Xóa margin mặc định của trình duyệt */
+}
+
+/* Phần wrapper chứa nội dung chính (có thể là thẻ <main>, <section> hoặc <div>) */
+main {
+    flex-grow: 1;           /* Bắt buộc phần này giãn ra để đẩy footer xuống đáy */
+}

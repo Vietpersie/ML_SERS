@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center py-5">
+  <h1 class="display-5 fw-bold">
+    <i class="bi bi-activity text-info me-2"></i>ML-SERS Analyzer
+  </h1>
+  <p class="lead text-secondary mt-3">
+    Nền tảng phân tích dữ liệu SERS kết hợp Machine Learning<br>
+    cho nghiên cứu khoa học
+  </p>
+  <hr class="my-4 w-25 mx-auto">
+
+  <div class="row justify-content-center g-4 mt-2">
+    <div class="col-md-3">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <i class="bi bi-upload display-6 text-info"></i>
+          <h5 class="mt-3">Upload dữ liệu</h5>
+          <p class="text-secondary small">Tải lên file CSV / Excel chứa phổ SERS</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <i class="bi bi-graph-up display-6 text-success"></i>
+          <h5 class="mt-3">Vẽ biểu đồ</h5>
+          <p class="text-secondary small">Plotly interactive — spectrum, heatmap, 3D</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <i class="bi bi-cpu display-6 text-warning"></i>
+          <h5 class="mt-3">Phân tích ML</h5>
+          <p class="text-secondary small">PCA, PLS-DA, phân loại mẫu tự động</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-muted mt-5 small">
+    
+  </p>
+  <a href="{{ url_for('data.upload') }}" class="btn btn-info btn-lg fw-bold mt-2">
+    <i class="bi bi-upload me-2"></i>Bắt đầu Upload dữ liệu SERS
+  </a>
+</div>
+{% endblock %}

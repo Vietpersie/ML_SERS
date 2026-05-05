@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2 class="fw-bold mb-4"><i class="bi bi-info-circle text-info me-2"></i>Giới thiệu dự án</h2>
+    <p>
+      <strong>ML-SERS Analyzer</strong> là nền tảng web kết hợp phương pháp quang phổ
+      <em>Surface-Enhanced Raman Scattering (SERS)</em> với các thuật toán
+      <em>Machine Learning</em> để hỗ trợ phân tích và phân loại mẫu trong nghiên cứu khoa học.
+    </p>
+    <h5 class="mt-4">Công nghệ sử dụng</h5>
+    <ul>
+      <li><strong>Flask</strong> — Backend framework</li>
+      <li><strong>Plotly</strong> — Biểu đồ phổ SERS tương tác</li>
+      <li><strong>scikit-learn</strong> — PCA, PLS-DA, SVM, phân loại mẫu</li>
+      <li><strong>pandas / numpy</strong> — Xử lý dữ liệu</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

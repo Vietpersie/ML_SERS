@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style>
+.stat-card { border-left: 4px solid #0dcaf0; }
+.warning-badge { background: rgba(255,193,7,0.15); border: 1px solid rgba(255,193,7,0.4); }
+.table-preview { font-size: 0.85rem; }
+.table-preview thead { background: rgba(13,202,240,0.1); }
+.sample-row:hover { background: rgba(13,202,240,0.05); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h2 class="fw-bold mb-1"><i class="bi bi-table text-info me-2"></i>Kết quả phân tích</h2>
+    <p class="text-secondary mb-0">
+      <i class="bi bi-file-earmark-spreadsheet me-1"></i>{{ filename }}
+    </p>
+  </div>
+  <a href="{{ url_for('data.upload') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-upload me-1"></i>Upload file khác
+  </a>
+</div>
+
+<!-- Warnings -->
+{% if stats.warnings %}
+<div class="alert warning-badge mb-4">
+  <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+  <strong>Cảnh báo:</strong>
+  <ul class="mb-0 mt-1">
+    {% for w in stats.warnings %}
+    <li>{{ w }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<!-- Thống kê tổng quan -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm stat-card h-100">
+      <div class="card-body p-3">
+        <p class="text-secondary small mb-1">Tổng số dòng</p>
+        <h3 class="fw-bold text-info mb-0">{{ stats.rows }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm stat-card h-100">
+      <div class="card-body p-3">
+        <p class="text-secondary small mb-1">Số mẫu (samples)</p>
+        <h3 class="fw-bold text-info mb-0">{{ stats.samples }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm stat-card h-100">
+      <div class="card-body p-3">
+        <p class="text-secondary small mb-1">Wavenumber min</p>
+        <h3 class="fw-bold text-info mb-0">{{ stats.wavenumber_min }}</h3>
+        <small class="text-secondary">cm⁻¹</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm stat-card h-100">
+      <div class="card-body p-3">
+        <p class="text-secondary small mb-1">Wavenumber max</p>
+        <h3 class="fw-bold text-info mb-0">{{ stats.wavenumber_max }}</h3>
+        <small class="text-secondary">cm⁻¹</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+
+  <!-- Thống kê từng mẫu -->
+  <div class="col-lg-5">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-transparent border-0 pt-3 pb-0">
+        <h6 class="fw-bold"><i class="bi bi-bar-chart me-2 text-info"></i>Thống kê từng mẫu</h6>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover table-preview mb-0">
+            <thead>
+              <tr>
+                <th class="ps-3">Mẫu</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Mean</th>
+                <th>Std</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for s in stats.sample_stats %}
+              <tr class="sample-row">
+                <td class="ps-3 fw-semibold">{{ s.name }}</td>
+                <td>{{ s.min }}</td>
+                <td>{{ s.max }}</td>
+                <td>{{ s.mean }}</td>
+                <td>{{ s.std }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview dữ liệu -->
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-transparent border-0 pt-3 pb-0">
+        <h6 class="fw-bold"><i class="bi bi-eye me-2 text-info"></i>Preview dữ liệu (10 dòng đầu)</h6>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover table-preview mb-0">
+            <thead>
+              <tr>
+                {% for col in columns %}
+                <th class="{% if loop.first %}ps-3{% endif %}">{{ col }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in preview %}
+              <tr>
+                {% for col in columns %}
+                <td class="{% if loop.first %}ps-3{% endif %}">{{ row[col] }}</td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Action buttons -->
+<div class="mt-4 d-flex gap-3">
+  <a href="{{ url_for('data.upload') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i>Upload lại
+  </a>
+  <button class="btn btn-info fw-bold" onclick="copyApiUrl()">
+    <i class="bi bi-code-slash me-1"></i>Copy API URL
+  </button>
+  <a href="{{ url_for('data.get_data', file_id=file_id) }}" target="_blank" class="btn btn-outline-info">
+    <i class="bi bi-braces me-1"></i>Xem JSON
+  </a>
+  <!-- Phase 3 sẽ kích hoạt nút này -->
+  <button class="btn btn-success fw-bold" disabled title="Sẽ mở khóa ở Phase 3">
+    <i class="bi bi-graph-up me-1"></i>Vẽ biểu đồ Plotly
+  </button>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function copyApiUrl() {
+    const url = "{{ url_for('data.get_data', file_id=file_id) }}";
+    navigator.clipboard.writeText(window.location.origin + url).then(() => {
+        const btn = event.target.closest('button');
+        const original = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-check me-1"></i>Đã copy!';
+        setTimeout(() => btn.innerHTML = original, 2000);
+    });
+}
+</script>
+{% endblock %}
